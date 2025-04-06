@@ -1,0 +1,21 @@
+networks:
+  order-service-network:
+    driver: bridge
+  microservices-spring-network:
+    external: true
+
+
+services:
+  mysql:
+    image: mysql:8.3.0
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - order-service-network
+      - microservices-spring-network
+
