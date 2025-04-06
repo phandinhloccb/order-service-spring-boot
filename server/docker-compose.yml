@@ -4,7 +4,6 @@ networks:
   microservices-spring-network:
     external: true
 
-
 services:
   mysql:
     image: mysql:8.3.0
@@ -13,7 +12,7 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - data:/var/lib/mysql
+      - ./data:/var/lib/mysql
       - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - order-service-network
