@@ -9,5 +9,4 @@ public record OrderRequest(
     BigDecimal price,
     Integer quantity
 ) {
-    
 }

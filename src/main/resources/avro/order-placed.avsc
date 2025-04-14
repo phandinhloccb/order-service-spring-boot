@@ -1,0 +1,8 @@
+{
+  "type": "record",
+  "name": "OrderPlacedEvent",
+  "namespace": "com.loc.microservices.order_service_spring_boot.event",
+  "fields": [
+    { "name": "orderNumber", "type": "string" },
+  ]
+}
