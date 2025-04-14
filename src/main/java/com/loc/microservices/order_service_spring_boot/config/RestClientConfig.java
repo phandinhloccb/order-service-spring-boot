@@ -1,4 +1,4 @@
-package com.loc.microservices.config;
+package com.loc.microservices.order_service_spring_boot.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
