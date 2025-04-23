@@ -5,8 +5,10 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.context.annotation.Bean;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.utility.DockerImageName;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @TestConfiguration(proxyBeanMethods = false)
+@ConditionalOnProperty(name = "tests.containers.enabled", havingValue = "true", matchIfMissing = false)
 class TestcontainersConfiguration {
 
 	@Bean
