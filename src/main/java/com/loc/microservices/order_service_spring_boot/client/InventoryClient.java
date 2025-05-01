@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 
 @FeignClient(name = "inventory", url = "${inventory.service.url}")
 public interface InventoryClient {
+
 
     Logger log = LoggerFactory.getLogger(InventoryClient.class);
 
