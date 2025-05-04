@@ -3,20 +3,24 @@ package com.loc.microservices.order_service_spring_boot.config;
 import io.micrometer.observation.ObservationRegistry;
 import io.micrometer.observation.aop.ObservedAspect;
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.KafkaTemplate;
 
+import com.loc.microservices.order_service_spring_boot.event.OrderPlacedEvent;
+
 @Configuration
-@RequiredArgsConstructor
 public class ObservabilityConfig {
 
-    private final KafkaTemplate kafkaTemplate;
+    @Autowired(required = false)
+    private KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
 
     @PostConstruct
     public void setObservationForKafkaTemplate() {
-        kafkaTemplate.setObservationEnabled(true);
+        if (kafkaTemplate != null) {
+            kafkaTemplate.setObservationEnabled(true);
+        }
     }
 
     @Bean

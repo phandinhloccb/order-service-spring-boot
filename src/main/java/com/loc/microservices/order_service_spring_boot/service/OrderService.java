@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -13,21 +14,23 @@ import com.loc.microservices.order_service_spring_boot.event.OrderPlacedEvent;
 import com.loc.microservices.order_service_spring_boot.model.Order;
 import com.loc.microservices.order_service_spring_boot.repository.OrderRepository;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class OrderService {
 
-    private final OrderRepository orderRepository;
-    private final InventoryClient inventoryClient;
-    private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
+
+    @Autowired
+    private OrderRepository orderRepository;
+    
+    @Autowired
+    private InventoryClient inventoryClient;
+    
+    @Autowired
+    private KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
     
     public void placeOrder(OrderRequest orderRequest) {
         var isProductInStock = inventoryClient.isInStock(orderRequest.skuCode(), orderRequest.quantity());
-        Logger log = LoggerFactory.getLogger(OrderService.class);
         
-
         if(isProductInStock){
             Order order = new Order();
             order.setOrderNumber(UUID.randomUUID().toString());
@@ -37,7 +40,6 @@ public class OrderService {
             orderRepository.save(order);
 
             // send kafka message
-            // order number, emal
             OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent();
             orderPlacedEvent.setOrderNumber(order.getOrderNumber());
             // orderPlacedEvent.setEmail(orderRequest.userDetails().email());
@@ -51,8 +53,5 @@ public class OrderService {
         }else{
             throw new RuntimeException("Product with Skucode: " + orderRequest.skuCode() + " is not in stock");
         }
-        
-
-        
     }
 }
