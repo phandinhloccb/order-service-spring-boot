@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.loc.microservices.order_service_spring_boot.client.InventoryClient;
 import com.loc.microservices.order_service_spring_boot.dto.OrderRequest;
 import com.loc.microservices.order_service_spring_boot.event.OrderPlacedEvent;
+import com.loc.microservices.order_service_spring_boot.exception.ProductNotFoundException;
 import com.loc.microservices.order_service_spring_boot.model.Order;
 import com.loc.microservices.order_service_spring_boot.repository.OrderRepository;
 
@@ -29,6 +30,7 @@ public class OrderService {
     private KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
     
     public void placeOrder(OrderRequest orderRequest) {
+        log.info("Using inventory client implementation: {}", inventoryClient.getClass().getName());
         var isProductInStock = inventoryClient.isInStock(orderRequest.skuCode(), orderRequest.quantity());
         
         if(isProductInStock){
@@ -42,16 +44,14 @@ public class OrderService {
             // send kafka message
             OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent();
             orderPlacedEvent.setOrderNumber(order.getOrderNumber());
-            // orderPlacedEvent.setEmail(orderRequest.userDetails().email());
-            // orderPlacedEvent.setFirstName(orderRequest.userDetails().firstName());
-            // orderPlacedEvent.setLastName(orderRequest.userDetails().lastName());
             
             log.info("Order placed event start sent to kafka topic: {}", orderPlacedEvent);
             kafkaTemplate.send("order-placed", orderPlacedEvent);
             log.info("Order placed event end sent to kafka topic: {}", orderPlacedEvent);
 
-        }else{
-            throw new RuntimeException("Product with Skucode: " + orderRequest.skuCode() + " is not in stock");
+        } else {
+            log.warn("Product not found or out of stock: {}", orderRequest.skuCode());
+            throw new ProductNotFoundException(orderRequest.skuCode());
         }
     }
 }

@@ -1,0 +1,24 @@
+type Order {
+  id: ID
+  orderNumber: String
+  skuCode: String
+  price: Float
+  quantity: Int
+  totalPrice: Float
+}
+
+input OrderInput {
+  skuCode: String!
+  price: Float!
+  quantity: Int!
+}
+
+type Query {
+  orderById(id: ID!): Order
+  allOrders: [Order]
+  orderByOrderNumber(orderNumber: String!): Order
+}
+
+type Mutation {
+  placeOrder(orderInput: OrderInput!): String
+} 

@@ -51,8 +51,7 @@ public class InventoryClientTest {
         };
         
         // Act - test trực tiếp phương thức fallback
-        boolean result = actualClient.fallbackMethod("error-product", 1, 
-                                   new RuntimeException("Service unavailable"));
+        boolean result = actualClient.isInStock("error-product", 1);
         
         // Assert
         assertFalse(result);
