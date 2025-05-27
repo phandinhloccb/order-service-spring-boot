@@ -17,7 +17,7 @@ public interface InventoryClient {
 
     Logger log = LoggerFactory.getLogger(InventoryClient.class);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/api/inventory")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/inventory/check-stock")
     @CircuitBreaker(name = "inventory", fallbackMethod = "fallbackMethod")
     @Retry(name = "inventory")
     boolean isInStock(@RequestParam String skuCode,@RequestParam Integer quantity );
