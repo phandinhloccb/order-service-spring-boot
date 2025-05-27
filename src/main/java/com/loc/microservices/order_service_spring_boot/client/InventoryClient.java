@@ -26,5 +26,4 @@ public interface InventoryClient {
         log.info("Cannot get inventory for skuCode: {}, quantity: {}, exception: {}", skuCode, quantity, exception.getMessage());
         return false;
     }
-    
 }
