@@ -52,4 +52,4 @@ logging:
 
 springdoc:
   swagger-ui:
-    url:
+    url: /v3/api-docs

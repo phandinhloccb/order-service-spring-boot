@@ -58,7 +58,6 @@ private fun generateOrderNumber(): String {
     return "ORD-$timestamp-$random"
 }
 
-// ✅ Sửa lại - Validation đơn giản
 fun OrderRequest.toModelWithValidation(): Result<Order> {
     return try {
         // Basic validation

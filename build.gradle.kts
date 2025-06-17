@@ -40,7 +40,6 @@ dependencies {
     implementation("org.liquibase:liquibase-core")
     implementation("mysql:mysql-connector-java:8.0.33")
     
-    // QUAN TRỌNG: Thêm đầy đủ liquibaseRuntime dependencies
     liquibaseRuntime("org.liquibase:liquibase-core:4.20.0")
     liquibaseRuntime("mysql:mysql-connector-java:8.0.33")
     liquibaseRuntime("info.picocli:picocli:4.6.3")
@@ -69,7 +68,6 @@ dependencies {
     }
 }
 
-// Cấu hình Liquibase
 liquibase {
     activities.register("main") {
         this.arguments = mapOf(
