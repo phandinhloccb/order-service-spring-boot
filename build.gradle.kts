@@ -43,8 +43,6 @@ dependencies {
     liquibaseRuntime("org.liquibase:liquibase-core:4.20.0")
     liquibaseRuntime("mysql:mysql-connector-java:8.0.33")
     liquibaseRuntime("info.picocli:picocli:4.6.3")
-    liquibaseRuntime("ch.qos.logback:logback-core:1.4.7")
-    liquibaseRuntime("ch.qos.logback:logback-classic:1.4.7")
     
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
