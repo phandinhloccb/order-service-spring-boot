@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: order-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/order_service 
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: mysql
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 20000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate 
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+        jdbc:
+          time_zone: UTC
+
+  h2:
+    console:
+      enabled: false
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: false
+    drop-first: false  
+    default-schema: order_service
+    liquibase-schema: order_service
+    contexts: dev,prod  
+    labels: v1.0.0      
+    parameters:
+      app.name: order-service
+      app.version: 1.0.0
+
+server:
+  port: 8081
+
+# Cấu hình logging
+logging:
+  level:
+    liquibase: INFO
+    com.loc: DEBUG
+    org.springframework.jdbc: DEBUG
+
+springdoc:
+  swagger-ui:
+    url:
