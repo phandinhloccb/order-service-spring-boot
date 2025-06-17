@@ -18,10 +18,10 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        format_sql: true
+        formatSql: true
         dialect: org.hibernate.dialect.MySQLDialect
         jdbc:
-          time_zone: UTC
+          timeZone: UTC
 
   h2:
     console:
@@ -34,10 +34,10 @@ spring:
     default-schema: order_service
     liquibase-schema: order_service
     contexts: dev,prod  
-    labels: v1.0.0      
+    label-filter: v1.0.0      
     parameters:
-      app.name: order-service
-      app.version: 1.0.0
+      appName: order-service
+      appVersion: 1.0.0
 
 server:
   port: 8081
@@ -46,8 +46,9 @@ server:
 logging:
   level:
     liquibase: INFO
-    com.loc: DEBUG
-    org.springframework.jdbc: DEBUG
+    comLoc: DEBUG
+    orgSpringframeworkJdbc: DEBUG
+    orgSpringframeworkWeb: DEBUG
 
 springdoc:
   swagger-ui:

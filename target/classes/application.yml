@@ -34,7 +34,6 @@ spring:
     default-schema: order_service
     liquibase-schema: order_service
     contexts: dev,prod  
-    labels: v1.0.0      
     parameters:
       app.name: order-service
       app.version: 1.0.0
