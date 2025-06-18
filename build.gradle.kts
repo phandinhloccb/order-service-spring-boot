@@ -6,6 +6,7 @@ plugins {
     kotlin("plugin.jpa") version "1.9.25"
     id("org.openapi.generator") version "7.4.0"
     id("org.liquibase.gradle") version "2.2.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.5"
 }
 
 group = "com.loc"
@@ -56,7 +57,14 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    
+    testImplementation("io.rest-assured:spring-mock-mvc:5.4.0")
+    testImplementation("io.rest-assured:kotlin-extensions:5.4.0")
+    testImplementation("com.ninja-squad:springmockk:4.0.2")
+    testImplementation("io.rest-assured:rest-assured:5.4.0")
+    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("org.hamcrest:hamcrest:2.2")
+    testImplementation("io.rest-assured:spring-mock-mvc-kotlin-extensions:5.4.0")
+
     configurations.all {
         exclude(group = "org.slf4j", module = "slf4j-simple")
         exclude(group = "io.swagger.core.v3", module = "swagger-annotations")
