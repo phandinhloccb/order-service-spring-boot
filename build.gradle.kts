@@ -37,6 +37,11 @@ dependencies {
     
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.0")
     implementation("org.glassfish.jaxb:jaxb-runtime:4.0.2")
+
+    implementation("jakarta.annotation:jakarta.annotation-api:2.1.1")
+    implementation("org.openapitools:jackson-databind-nullable:0.2.6")
+    implementation("com.google.code.findbugs:jsr305:3.0.2")
+    implementation("javax.annotation:javax.annotation-api:1.3.2")
     
     runtimeOnly("com.h2database:h2")
     implementation("org.liquibase:liquibase-core")
@@ -108,17 +113,18 @@ openApiGenerate {
 
 tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("generateInventoryClient") {
     inputSpec.set("$rootDir/src/main/resources/static/inventory-openapi.yaml")
-    generatorName.set("kotlin")
+    generatorName.set("java")
+    library.set("webclient")
     apiPackage.set("com.loc.orderservice.client.inventory.api")
     packageName.set("com.loc.orderservice.client.inventory")
     modelPackage.set("com.loc.orderservice.client.inventory.model")
-    invokerPackage.set("com.loc.orderservice.client.inventory.infrastructure")
-    outputDir.set("${layout.buildDirectory.get()}/generated-inventory-client")
+    invokerPackage.set("com.loc.orderservice.client.inventory.invoke")
+    outputDir.set(generatedResourcesDir)
 
-    configOptions.put("library", "jvm-spring-webclient")
-    configOptions.put("useSpringBoot3", "true")
     configOptions.put("dateLibrary", "java8")
-    configOptions.put("serializationLibrary", "jackson")
+    configOptions.put("delegatePattern", "true")
+    configOptions.put("interfaceOnly", "true")
+    configOptions.put("modelMutable", "true")
     configOptions.put("enumPropertyNaming", "UPPERCASE")
     
     skipValidateSpec.set(true)
