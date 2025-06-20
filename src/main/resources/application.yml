@@ -53,3 +53,11 @@ logging:
 springdoc:
   swagger-ui:
     url: /v3/api-docs
+
+
+inventory:
+  service:
+    url: http://localhost:8082
+
+servers:
+  include-warmup: true

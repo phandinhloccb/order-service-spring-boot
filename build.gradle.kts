@@ -6,7 +6,7 @@ plugins {
     kotlin("plugin.jpa") version "1.9.25"
     id("org.openapi.generator") version "7.4.0"
     id("org.liquibase.gradle") version "2.2.0"
-    id("io.gitlab.arturbosch.detekt") version "1.23.5"
+    // id("io.gitlab.arturbosch.detekt") version "1.23.7" 
 }
 
 group = "com.loc"
@@ -31,6 +31,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     
@@ -105,6 +106,24 @@ openApiGenerate {
     configOptions.put("enumPropertyNaming", "UPPERCASE")
 }
 
+tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("generateInventoryClient") {
+    inputSpec.set("$rootDir/src/main/resources/static/inventory-openapi.yaml")
+    generatorName.set("kotlin")
+    apiPackage.set("com.loc.orderservice.client.inventory.api")
+    packageName.set("com.loc.orderservice.client.inventory")
+    modelPackage.set("com.loc.orderservice.client.inventory.model")
+    invokerPackage.set("com.loc.orderservice.client.inventory.infrastructure")
+    outputDir.set("${layout.buildDirectory.get()}/generated-inventory-client")
+
+    configOptions.put("library", "jvm-spring-webclient")
+    configOptions.put("useSpringBoot3", "true")
+    configOptions.put("dateLibrary", "java8")
+    configOptions.put("serializationLibrary", "jackson")
+    configOptions.put("enumPropertyNaming", "UPPERCASE")
+    
+    skipValidateSpec.set(true)
+}
+
 kotlin.sourceSets["main"].kotlin.srcDir("$generatedResourcesDir/src/main/kotlin")
 java.sourceSets["main"].java.srcDir("$generatedResourcesDir/src/main/java")
 
@@ -124,4 +143,16 @@ allOpen {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+
+
+kotlin.sourceSets["main"].kotlin.srcDir("${layout.buildDirectory.get()}/generated-inventory-client/src/main/kotlin")
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    dependsOn(tasks.openApiGenerate, tasks.named("generateInventoryClient"))
+    kotlinOptions {
+        freeCompilerArgs = listOf("-Xjsr305=strict")
+        jvmTarget = "17"
+    }
 }

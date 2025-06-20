@@ -1,8 +1,8 @@
-package com.loc.demo_microservices.service
+package com.loc.order_service.service
 
-import com.loc.demo_microservices.entity.OrderEntity
-import com.loc.demo_microservices.model.Order
-import com.loc.demo_microservices.repository.OrderRepository
+import com.loc.order_service.entity.OrderEntity
+import com.loc.order_service.model.Order
+import com.loc.order_service.repository.OrderRepository
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

@@ -1,4 +1,4 @@
-package com.loc.demo_microservices
+package com.loc.order_service
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

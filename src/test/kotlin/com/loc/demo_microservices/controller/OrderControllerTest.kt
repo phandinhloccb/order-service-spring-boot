@@ -1,8 +1,8 @@
-package com.loc.demo_microservices.controller
+package com.loc.order_service.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.loc.demo_microservices.model.Order
-import com.loc.demo_microservices.service.OrderService
+import com.loc.order_service.model.Order
+import com.loc.order_service.service.OrderService
 import com.loc.orderservice.model.OrderRequest
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith

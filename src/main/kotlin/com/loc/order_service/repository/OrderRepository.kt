@@ -1,6 +1,6 @@
-package com.loc.demo_microservices.repository
+package com.loc.order_service.repository
 
-import com.loc.demo_microservices.entity.OrderEntity
+import com.loc.order_service.entity.OrderEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

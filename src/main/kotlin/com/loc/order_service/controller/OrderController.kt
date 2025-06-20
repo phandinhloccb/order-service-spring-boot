@@ -1,12 +1,12 @@
-package com.loc.demo_microservices.controller
+package com.loc.order_service.controller
 
-import com.loc.demo_microservices.mapper.toModel
-import com.loc.demo_microservices.mapper.toResponse
-import com.loc.demo_microservices.mapper.toResponses
-import com.loc.demo_microservices.model.Order
+import com.loc.order_service.mapper.toModel
+import com.loc.order_service.mapper.toResponse
+import com.loc.order_service.mapper.toResponses
+import com.loc.order_service.model.Order
 import com.loc.orderservice.model.OrderRequest
 import com.loc.orderservice.model.OrderResponse
-import com.loc.demo_microservices.service.OrderService
+import com.loc.order_service.service.OrderService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

@@ -1,7 +1,7 @@
-package com.loc.demo_microservices.mapper
+package com.loc.order_service.mapper
 
-import com.loc.demo_microservices.entity.OrderEntity
-import com.loc.demo_microservices.model.Order
+import com.loc.order_service.entity.OrderEntity
+import com.loc.order_service.model.Order
 
 import com.loc.orderservice.model.OrderRequest
 import com.loc.orderservice.model.OrderResponse

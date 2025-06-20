@@ -1,4 +1,4 @@
-package com.loc.demo_microservices.model
+package com.loc.order_service.model
 
 import java.math.BigDecimal
 import java.time.LocalDateTime

@@ -1,4 +1,4 @@
-package com.loc.demo_microservices.entity
+package com.loc.order_service.entity
 
 import jakarta.persistence.Id
 import jakarta.persistence.GeneratedValue
