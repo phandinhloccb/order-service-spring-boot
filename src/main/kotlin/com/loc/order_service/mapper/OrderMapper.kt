@@ -13,8 +13,7 @@ fun OrderRequest.toModel(): Order {
         orderNumber = generateOrderNumber(),
         skuCode = this.skuCode,           
         price = this.price,               
-        quantity = this.quantity,         
-        createdAt = LocalDateTime.now()
+        quantity = this.quantity
     )
 }
 
@@ -25,7 +24,6 @@ fun Order.toResponse(): OrderResponse {
         skuCode = this.skuCode,
         price = this.price,
         quantity = this.quantity,
-        createdAt = this.createdAt
     )
 }
 
@@ -36,7 +34,6 @@ fun Order.toEntity(): OrderEntity {
         skuCode = this.skuCode,
         price = this.price,
         quantity = this.quantity,
-        createdAt = this.createdAt
     )
 }
 
@@ -47,7 +44,6 @@ fun OrderEntity.toModel(): Order {
         skuCode = this.skuCode,
         price = this.price,
         quantity = this.quantity,
-        createdAt = LocalDateTime.now() 
     )
 }
 
