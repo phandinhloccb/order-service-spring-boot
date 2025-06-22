@@ -15,7 +15,7 @@ class OrderController(
     private val orderService: OrderService
 ) {
     @PostMapping
-    fun createOrder(@RequestBody orderRequest: OrderRequest): ResponseEntity<Any> {
+    suspend fun createOrder(@RequestBody orderRequest: OrderRequest): ResponseEntity<Any> {
         return when (val result = orderService.createOrder(orderRequest.toModel())) {
             is OrderResult.Success -> ResponseEntity.status(HttpStatus.CREATED).body(result.order.toResponse())
             is OrderResult.BusinessFailure -> ResponseEntity.unprocessableEntity().body(mapOf("error" to result.reason))
