@@ -1,0 +1,15 @@
+{
+    "name": "OrderCompletedEvent",
+    "type": "record",
+    "namespace": "com.loc.orderservice.generated.avro.model",
+    "fields": [
+        { 
+            "name": "orderId",
+            "type": "string"
+        },
+        {
+            "name": "orderDate",
+            "type": "string"
+        }
+    ]
+}

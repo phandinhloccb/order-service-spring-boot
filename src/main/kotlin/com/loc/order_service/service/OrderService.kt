@@ -6,6 +6,8 @@ import com.loc.order_service.model.Order
 import com.loc.order_service.model.OrderResult
 import com.loc.order_service.repository.OrderRepository
 import com.loc.order_service.service.client.InventoryService
+import com.loc.order_service.producer.KafkaEventProducer
+import com.loc.orderservice.generated.avro.model.OrderCompletedEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
@@ -15,7 +17,8 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class OrderService(
     private val orderRepository: OrderRepository,
-    private val inventoryService: InventoryService
+    private val inventoryService: InventoryService,
+    private val kafkaEventProducer: KafkaEventProducer
 ) {
     @Transactional
     suspend fun createOrder(order: Order): OrderResult {
@@ -27,8 +30,17 @@ class OrderService(
                 val saved = withContext(Dispatchers.IO) {
                     orderRepository.save(order.toEntity())
                 }
+                
+                kafkaEventProducer.publishOrderCompletedEvent(
+                    OrderCompletedEvent.newBuilder()
+                        .setOrderId(saved.id.toString())
+                        .setOrderDate(saved.createdAt.toString())
+                        .build()
+                )
+                
                 OrderResult.Success(saved.toModel())
             }
+
             InventoryResult.OutOfStock -> {
                 OrderResult.BusinessFailure("Product ${order.skuCode} is out of stock")
             }

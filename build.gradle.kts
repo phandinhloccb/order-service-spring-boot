@@ -6,7 +6,7 @@ plugins {
     kotlin("plugin.jpa") version "1.9.25"
     id("org.openapi.generator") version "7.4.0"
     id("org.liquibase.gradle") version "2.2.0"
-    // id("io.gitlab.arturbosch.detekt") version "1.23.7" 
+    id("com.github.davidmc24.gradle.plugin.avro") version "1.8.0"
 }
 
 group = "com.loc"
@@ -18,11 +18,15 @@ java {
     }
 }
 
-// Sửa deprecated buildDir
 val generatedResourcesDir = "${layout.buildDirectory.get()}/generated-resources"
+val generatedAvroDir = "${layout.buildDirectory.get()}/generated-avro"
+val generatedInventoryDir = "${layout.buildDirectory.get()}/generated-inventory-client"
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://packages.confluent.io/maven/")
+    }
 }
 
 dependencies {
@@ -33,6 +37,14 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.3")
+    
+    // Kafka dependencies
+    implementation("org.apache.kafka:kafka-clients")
+    implementation("org.springframework.kafka:spring-kafka")
+    
+    // Avro dependencies
+    implementation("org.apache.avro:avro:1.11.3")
+    implementation("io.confluent:kafka-avro-serializer:7.4.0")
     
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     
@@ -80,6 +92,27 @@ dependencies {
     }
 }
 
+// Configure source sets
+sourceSets {
+    main {
+        java {
+            srcDir("$generatedResourcesDir/openapi/src/main/java")
+            srcDir("$generatedResourcesDir/avro/src/main/java")
+            srcDir("$generatedResourcesDir/inventory/src/main/java")
+        }
+        kotlin {
+            srcDir("$generatedResourcesDir/openapi/src/main/kotlin")
+            srcDir("$generatedResourcesDir/inventory/src/main/kotlin")
+        }
+    }
+}
+
+// Avro configuration
+tasks.named<com.github.davidmc24.gradle.plugin.avro.GenerateAvroJavaTask>("generateAvroJava") {
+    source("src/main/resources/static/avro")
+    setOutputDir(file("$generatedResourcesDir/avro"))
+}
+
 liquibase {
     activities.register("main") {
         this.arguments = mapOf(
@@ -94,13 +127,14 @@ liquibase {
     runList = "main"
 }
 
+// OpenAPI configuration
 openApiGenerate {
     inputSpec.set("$rootDir/src/main/resources/static/openapi.yaml")
     generatorName.set("kotlin-spring")
     apiPackage.set("com.loc.orderservice.api")
     packageName.set("com.loc.orderservice.api")
     modelPackage.set("com.loc.orderservice.model")
-    outputDir.set(generatedResourcesDir)
+    outputDir.set("$generatedResourcesDir/openapi")
 
     configOptions.put("useSpringBoot3", "true")
     configOptions.put("dateLibrary", "java8")
@@ -111,6 +145,7 @@ openApiGenerate {
     configOptions.put("enumPropertyNaming", "UPPERCASE")
 }
 
+// Inventory client configuration
 tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("generateInventoryClient") {
     inputSpec.set("$rootDir/src/main/resources/static/inventory-openapi.yaml")
     generatorName.set("java")
@@ -119,7 +154,7 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("gen
     packageName.set("com.loc.orderservice.client.inventory")
     modelPackage.set("com.loc.orderservice.client.inventory.model")
     invokerPackage.set("com.loc.orderservice.client.inventory.invoke")
-    outputDir.set(generatedResourcesDir)
+    outputDir.set("$generatedResourcesDir/inventory")
 
     configOptions.put("dateLibrary", "java8")
     configOptions.put("delegatePattern", "true")
@@ -130,11 +165,8 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("gen
     skipValidateSpec.set(true)
 }
 
-kotlin.sourceSets["main"].kotlin.srcDir("$generatedResourcesDir/src/main/kotlin")
-java.sourceSets["main"].java.srcDir("$generatedResourcesDir/src/main/java")
-
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    dependsOn(tasks.openApiGenerate)
+    dependsOn(tasks.openApiGenerate, tasks.named("generateAvroJava"), tasks.named("generateInventoryClient"))
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "17"
@@ -149,16 +181,4 @@ allOpen {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-
-
-kotlin.sourceSets["main"].kotlin.srcDir("${layout.buildDirectory.get()}/generated-inventory-client/src/main/kotlin")
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    dependsOn(tasks.openApiGenerate, tasks.named("generateInventoryClient"))
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "17"
-    }
 }

@@ -24,7 +24,8 @@ fun Order.toResponse(): OrderResponse {
         orderNumber = this.orderNumber,
         skuCode = this.skuCode,
         price = this.price,
-        quantity = this.quantity
+        quantity = this.quantity,
+        createdAt = this.createdAt
     )
 }
 
@@ -34,7 +35,8 @@ fun Order.toEntity(): OrderEntity {
         orderNumber = this.orderNumber,
         skuCode = this.skuCode,
         price = this.price,
-        quantity = this.quantity
+        quantity = this.quantity,
+        createdAt = this.createdAt
     )
 }
 

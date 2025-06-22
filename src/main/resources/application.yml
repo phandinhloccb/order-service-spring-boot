@@ -38,6 +38,17 @@ spring:
     parameters:
       appName: order-service
       appVersion: 1.0.0
+  
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        schema.registry.url: http://localhost:8081
+    output:
+      topic:
+        order-completed: orders.order.completed.v1
 
 server:
   port: 8081
