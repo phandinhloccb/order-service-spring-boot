@@ -2,6 +2,7 @@ package com.loc.order_service.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.loc.order_service.model.Order
+import com.loc.order_service.model.OrderResult
 import com.loc.order_service.service.OrderService
 import com.loc.orderservice.model.OrderRequest
 import io.mockk.junit5.MockKExtension
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.MockMvc
 import com.ninjasquad.springmockk.MockkBean
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.restassured.http.ContentType
@@ -19,6 +21,7 @@ import org.junit.jupiter.api.Test
 import io.restassured.module.mockmvc.kotlin.extensions.Given
 import io.restassured.module.mockmvc.kotlin.extensions.Then
 import io.restassured.module.mockmvc.kotlin.extensions.When
+import kotlinx.coroutines.test.runTest
 import org.springframework.http.HttpStatus
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -38,7 +41,7 @@ internal class OrderControllerTest (
     }
 
     @Test
-    fun `should return CREATED when creating a new order`() {
+    fun `should return CREATED when creating a new order`() = runTest() {
         // Given
         val orderRequest = OrderRequest(
             skuCode = "123",
@@ -55,7 +58,7 @@ internal class OrderControllerTest (
             createdAt = LocalDateTime.now()
         )
 
-        every { orderService.createOrder(any()) } returns createdOrder
+        coEvery { orderService.createOrder(any()) } returns OrderResult.Success(createdOrder)
 
         //When / Then
         Given {
