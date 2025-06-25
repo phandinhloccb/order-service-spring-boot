@@ -7,5 +7,7 @@
 
     <!-- Include các file migration -->
     <include file="src/main/resources/db/changelog/changes/2025-06-13-17-00-create-orders-table.sql"/>
+    <include file="src/main/resources/db/changelog/changes/2025-06-25-17-00-add-status-orders-table.sql"/>
+
     
 </databaseChangeLog> 

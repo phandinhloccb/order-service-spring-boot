@@ -85,6 +85,18 @@ components:
           type: integer
           format: int32
           example: 1
+        status:
+          type: string
+          enum: [PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED, FAILED]
+          example: "PENDING"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-01-15T10:30:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-01-15T10:30:00Z"
     ErrorResponse:
       type: object
       properties:

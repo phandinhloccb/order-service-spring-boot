@@ -45,7 +45,7 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
       properties:
-        schemaRegistryUrl: http://localhost:8085
+        schema.registry.url: http://localhost:8085
     output:
       topic:
         order-completed: orders.order.completed.v1

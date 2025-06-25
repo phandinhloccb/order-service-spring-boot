@@ -1,5 +1,6 @@
 package com.loc.order_service.service
 
+import com.loc.order_service.enum.OrderStatusEnum
 import com.loc.order_service.mapper.*
 import com.loc.order_service.model.InventoryResult
 import com.loc.order_service.model.Order
@@ -27,8 +28,11 @@ class OrderService(
 
         return when (val stock = inventoryService.checkStock(order.skuCode, order.quantity)) {
             InventoryResult.InStock -> {
+
+
+                val  orderWithConfirmedStatus = order.copy(status = OrderStatusEnum.CONFIRMED)
                 val saved = withContext(Dispatchers.IO) {
-                    orderRepository.save(order.toEntity())
+                    orderRepository.save(orderWithConfirmedStatus.toEntity())
                 }
                 
                 kafkaEventProducer.publishOrderCompletedEvent(

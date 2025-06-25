@@ -1,5 +1,6 @@
 package com.loc.order_service.entity
 
+import com.loc.order_service.enum.OrderStatusEnum
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -20,6 +21,10 @@ data class OrderEntity(
     val quantity: Int,
 
     val price: BigDecimal,
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    val status: OrderStatusEnum,
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

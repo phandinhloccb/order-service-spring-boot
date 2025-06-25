@@ -1,11 +1,11 @@
 package com.loc.order_service.mapper
 
 import com.loc.order_service.entity.OrderEntity
+import com.loc.order_service.enum.OrderStatusEnum
 import com.loc.order_service.model.Order
 
 import com.loc.orderservice.model.OrderRequest
 import com.loc.orderservice.model.OrderResponse
-import java.time.LocalDateTime
 import java.util.*
 
 fun OrderRequest.toModel(): Order {
@@ -13,7 +13,8 @@ fun OrderRequest.toModel(): Order {
         orderNumber = generateOrderNumber(),
         skuCode = this.skuCode,           
         price = this.price,               
-        quantity = this.quantity
+        quantity = this.quantity,
+        status = OrderStatusEnum.PENDING
     )
 }
 
@@ -24,7 +25,20 @@ fun Order.toResponse(): OrderResponse {
         skuCode = this.skuCode,
         price = this.price,
         quantity = this.quantity,
+        status = this.status.toResponseStatus()
     )
+}
+
+fun OrderStatusEnum.toResponseStatus(): OrderResponse.Status {
+    return when (this) {
+        OrderStatusEnum.PENDING -> OrderResponse.Status.PENDING
+        OrderStatusEnum.CONFIRMED -> OrderResponse.Status.CONFIRMED
+        OrderStatusEnum.PROCESSING -> OrderResponse.Status.PROCESSING
+        OrderStatusEnum.SHIPPED -> OrderResponse.Status.SHIPPED
+        OrderStatusEnum.DELIVERED -> OrderResponse.Status.DELIVERED
+        OrderStatusEnum.CANCELLED -> OrderResponse.Status.CANCELLED
+        OrderStatusEnum.FAILED -> OrderResponse.Status.FAILED
+    }
 }
 
 fun Order.toEntity(): OrderEntity {
@@ -34,6 +48,7 @@ fun Order.toEntity(): OrderEntity {
         skuCode = this.skuCode,
         price = this.price,
         quantity = this.quantity,
+        status = this.status
     )
 }
 
@@ -44,8 +59,12 @@ fun OrderEntity.toModel(): Order {
         skuCode = this.skuCode,
         price = this.price,
         quantity = this.quantity,
+        status = this.status,
+        createdAt = this.createdAt,
+        updatedAt = this.updatedAt
     )
 }
+
 
 fun List<OrderEntity>.toModels(): List<Order> = this.map { it.toModel() }
 fun List<Order>.toResponses(): List<OrderResponse> = this.map { it.toResponse() }
