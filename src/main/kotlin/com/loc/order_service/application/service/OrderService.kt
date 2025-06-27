@@ -29,12 +29,12 @@ class OrderService(
                 val orderWithConfirmedStatus = order.copy(status = OrderStatusEnum.CONFIRMED)
                 val savedOrder = orderDomainRepository.save(orderWithConfirmedStatus)
                 
-//                kafkaEventProducer.publishOrderCompletedEvent(
-//                    OrderCompletedEvent.newBuilder()
-//                        .setOrderId(savedOrder.id.toString())
-//                        .setOrderDate(savedOrder.createdAt.toString())
-//                        .build()
-//                )
+                kafkaEventProducer.publishOrderCompletedEvent(
+                    OrderCompletedEvent.newBuilder()
+                        .setOrderId(savedOrder.id.toString())
+                        .setOrderDate(savedOrder.createdAt.toString())
+                        .build()
+                )
                 
                 OrderResult.Success(savedOrder)
             }
