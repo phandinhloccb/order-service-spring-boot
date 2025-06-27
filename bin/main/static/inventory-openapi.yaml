@@ -1,0 +1,84 @@
+openapi: 3.0.3
+info:
+  title: Inventory Service API
+  description: API for checking product inventory
+  version: v1.0.0
+servers:
+  - url: ${inventory.service.url}
+    description: Inventory service server
+paths:
+  /api/inventory/check-stock:
+    get:
+      summary: Check if product is in stock
+      description: Check if a product with given SKU code and quantity is available in inventory
+      operationId: checkStock
+      parameters:
+        - name: skuCode
+          in: query
+          required: true
+          description: Product SKU code
+          schema:
+            type: string
+            example: "IPHONE13-128"
+        - name: quantity
+          in: query
+          required: true
+          description: Required quantity
+          schema:
+            type: integer
+            format: int32
+            example: 2
+      responses:
+        '200':
+          description: Stock check result
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: true
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /warmup:
+    get:
+      summary: Warmup endpoint
+      description: Endpoint to warm up the service
+      operationId: warmup
+      responses:
+        '200':
+          description: Service warmed up
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "{}"
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: "2023-05-20T14:30:15.123Z"
+        status:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: "Bad Request"
+        message:
+          type: string
+          example: "Invalid SKU code"
+        path:
+          type: string
+          example: "/api/inventory/check-stock"
