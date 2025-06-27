@@ -6,8 +6,6 @@ import com.loc.order_service.domain.enum.OrderStatusEnum
 import com.loc.order_service.domain.model.InventoryResult
 import com.loc.order_service.domain.model.Order
 import com.loc.order_service.domain.model.OrderResult
-import com.loc.order_service.infrastructure.mapper.toEntity
-import com.loc.order_service.infrastructure.mapper.toModel
 import com.loc.order_service.infrastructure.producer.KafkaEventProducer
 import com.loc.orderservice.generated.avro.model.OrderCompletedEvent
 import mu.KotlinLogging
@@ -31,12 +29,12 @@ class OrderService(
                 val orderWithConfirmedStatus = order.copy(status = OrderStatusEnum.CONFIRMED)
                 val savedOrder = orderDomainRepository.save(orderWithConfirmedStatus)
                 
-                kafkaEventProducer.publishOrderCompletedEvent(
-                    OrderCompletedEvent.newBuilder()
-                        .setOrderId(savedOrder.id.toString())
-                        .setOrderDate(savedOrder.createdAt.toString())
-                        .build()
-                )
+//                kafkaEventProducer.publishOrderCompletedEvent(
+//                    OrderCompletedEvent.newBuilder()
+//                        .setOrderId(savedOrder.id.toString())
+//                        .setOrderDate(savedOrder.createdAt.toString())
+//                        .build()
+//                )
                 
                 OrderResult.Success(savedOrder)
             }
