@@ -26,11 +26,9 @@ class OrderService(
         val log = KotlinLogging.logger {}
         log.info { "Creating order for SKU: ${order.skuCode}" }
 
-        return when (val stock = inventoryService.checkStock(order.skuCode, order.quantity)) {
+        return when (inventoryService.checkStock(order.skuCode, order.quantity)) {
             InventoryResult.InStock -> {
-
-
-                val  orderWithConfirmedStatus = order.copy(status = OrderStatusEnum.CONFIRMED)
+                val orderWithConfirmedStatus = order.copy(status = OrderStatusEnum.CONFIRMED)
                 val saved = withContext(Dispatchers.IO) {
                     orderRepository.save(orderWithConfirmedStatus.toEntity())
                 }
