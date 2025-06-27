@@ -41,4 +41,16 @@ class NetworkException(
 ) : InfrastructureException(message, cause)
 
 
-// database connect exception
+// kafka connect exception
+class KafkaPublishException(
+    message: String = "Failed to publish message to Kafka",
+    cause: Throwable? = null
+) : InfrastructureException(message, cause)
+
+// database
+class DatabaseConnectionException(
+    message: String = "Failed to connect to the database",
+    cause: Throwable? = null
+) : InfrastructureException(message, cause)
+
+

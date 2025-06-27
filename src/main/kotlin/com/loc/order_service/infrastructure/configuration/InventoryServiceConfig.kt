@@ -1,4 +1,4 @@
-package com.loc.order_service.configuration
+package com.loc.order_service.infrastructure.configuration
 
 import com.loc.orderservice.client.inventory.api.DefaultApi
 import com.loc.orderservice.client.inventory.invoke.ApiClient

@@ -29,79 +29,25 @@ class GlobalExceptionHandler {
             )
     }
 
-    @ExceptionHandler(ExternalServiceUnavailableException::class)
-    fun handleExternalServiceUnavailable(ex: ExternalServiceUnavailableException): ResponseEntity<ErrorResponse> {
-        log.error("External service unavailable: ${ex.message}", ex)
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-            .body(
-                ErrorResponse(
-                    timestamp = LocalDateTime.now(),
-                    status = HttpStatus.SERVICE_UNAVAILABLE.value(),
-                    error = "External Service Unavailable",
-                    message = ex.message ?: "External service is currently unavailable",
-                    path = "/api/orders"
-                )
-            )
-    }
-
-    @ExceptionHandler(ExternalServiceTimeoutException::class)
-    fun handleExternalServiceTimeout(ex: ExternalServiceTimeoutException): ResponseEntity<ErrorResponse> {
-        log.error("External service timeout: ${ex.message}", ex)
-        return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
-            .body(
-                ErrorResponse(
-                    timestamp = LocalDateTime.now(),
-                    status = HttpStatus.REQUEST_TIMEOUT.value(),
-                    error = "Service Timeout",
-                    message = ex.message ?: "External service request timed out",
-                    path = "/api/orders"
-                )
-            )
-    }
-
-    @ExceptionHandler(ExternalServiceClientException::class)
-    fun handleExternalServiceClientError(ex: ExternalServiceClientException): ResponseEntity<ErrorResponse> {
-        log.error("External service client error: ${ex.message}", ex)
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(
-                ErrorResponse(
-                    timestamp = LocalDateTime.now(),
-                    status = HttpStatus.BAD_REQUEST.value(),
-                    error = "Client Error",
-                    message = ex.message ?: "Invalid request to external service",
-                    path = "/api/orders"
-                )
-            )
-    }
-
-    @ExceptionHandler(ExternalServiceServerException::class)
-    fun handleExternalServiceServerError(ex: ExternalServiceServerException): ResponseEntity<ErrorResponse> {
-        log.error("External service server error: ${ex.message}", ex)
-        return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
-            .body(
-                ErrorResponse(
-                    timestamp = LocalDateTime.now(),
-                    status = HttpStatus.BAD_GATEWAY.value(),
-                    error = "External Service Error",
-                    message = ex.message ?: "External service encountered an error",
-                    path = "/api/orders"
-                )
-            )
-    }
-
-    @ExceptionHandler(NetworkException::class)
-    fun handleNetworkException(ex: NetworkException): ResponseEntity<ErrorResponse> {
-        log.error("Network error: ${ex.message}", ex)
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-            .body(
-                ErrorResponse(
-                    timestamp = LocalDateTime.now(),
-                    status = HttpStatus.SERVICE_UNAVAILABLE.value(),
-                    error = "Network Error",
-                    message = ex.message ?: "Network connectivity issue",
-                    path = "/api/orders"
-                )
-            )
+    @ExceptionHandler(InfrastructureException::class)
+    fun handleInfrastructureException(ex: InfrastructureException): ResponseEntity<ErrorResponse> {
+        log.error("Infrastructure error: ${ex.message}", ex)
+        val status = when (ex) {
+            is ExternalServiceTimeoutException -> HttpStatus.REQUEST_TIMEOUT
+            is ExternalServiceClientException -> HttpStatus.BAD_REQUEST
+            is ExternalServiceServerException -> HttpStatus.BAD_GATEWAY
+            is KafkaPublishException -> HttpStatus.SERVICE_UNAVAILABLE
+            is DatabaseConnectionException -> HttpStatus.SERVICE_UNAVAILABLE
+            else -> HttpStatus.SERVICE_UNAVAILABLE
+        }
+        return ResponseEntity.status(status)
+            .body(ErrorResponse(
+                timestamp = LocalDateTime.now(),
+                status = status.value(),
+                error = "Infrastructure Error",
+                message = ex.message ?: "An infrastructure error occurred",
+                path = "/api/orders"
+            ))
     }
 
     @ExceptionHandler(Exception::class)

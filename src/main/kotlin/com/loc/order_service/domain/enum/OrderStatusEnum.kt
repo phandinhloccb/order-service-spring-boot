@@ -1,4 +1,4 @@
-package com.loc.order_service.enum
+package com.loc.order_service.domain.enum
 
 enum class OrderStatusEnum {
     PENDING,        

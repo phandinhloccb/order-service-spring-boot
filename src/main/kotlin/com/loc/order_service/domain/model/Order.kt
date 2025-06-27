@@ -1,8 +1,8 @@
-package com.loc.order_service.model
+package com.loc.order_service.domain.model
 
+import com.loc.order_service.domain.enum.OrderStatusEnum
 import java.math.BigDecimal
 import java.time.LocalDateTime
-import com.loc.order_service.enum.OrderStatusEnum
 
 data class Order(
     val id: Long? = null,

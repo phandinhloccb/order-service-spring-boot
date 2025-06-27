@@ -1,4 +1,4 @@
-package com.loc.order_service.model
+package com.loc.order_service.domain.model
  
 sealed class InventoryResult {
     object InStock : InventoryResult()

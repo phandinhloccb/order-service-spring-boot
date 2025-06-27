@@ -1,8 +1,8 @@
-package com.loc.order_service.service.client
+package com.loc.order_service.application.service.client
 
+import com.loc.order_service.domain.model.InventoryResult
 import com.loc.order_service.exception.domain.InventoryCheckException
 import com.loc.order_service.exception.infrastructure.*
-import com.loc.order_service.model.InventoryResult
 import com.loc.orderservice.client.inventory.api.DefaultApi
 import kotlinx.coroutines.reactor.awaitSingle
 import mu.KotlinLogging

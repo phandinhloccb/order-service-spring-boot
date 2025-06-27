@@ -1,6 +1,6 @@
-package com.loc.order_service.entity
+package com.loc.order_service.infrastructure.entity
 
-import com.loc.order_service.enum.OrderStatusEnum
+import com.loc.order_service.domain.enum.OrderStatusEnum
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp

@@ -1,13 +1,12 @@
-package com.loc.order_service.mapper
+package com.loc.order_service.controller.mapper
 
-import com.loc.order_service.entity.OrderEntity
-import com.loc.order_service.enum.OrderStatusEnum
-import com.loc.order_service.model.Order
-
+import com.loc.order_service.domain.model.Order
+import com.loc.order_service.domain.enum.OrderStatusEnum
 import com.loc.orderservice.model.OrderRequest
 import com.loc.orderservice.model.OrderResponse
 import java.util.*
 
+// ✅ Domain ↔ DTO mapping Interface layer (controller)
 fun OrderRequest.toModel(): Order {
     return Order(
         orderNumber = generateOrderNumber(),
@@ -41,36 +40,10 @@ fun OrderStatusEnum.toResponseStatus(): OrderResponse.Status {
     }
 }
 
-fun Order.toEntity(): OrderEntity {
-    return OrderEntity(
-        id = this.id,
-        orderNumber = this.orderNumber,
-        skuCode = this.skuCode,
-        price = this.price,
-        quantity = this.quantity,
-        status = this.status
-    )
-}
-
-fun OrderEntity.toModel(): Order {
-    return Order(
-        id = this.id,
-        orderNumber = this.orderNumber,
-        skuCode = this.skuCode,
-        price = this.price,
-        quantity = this.quantity,
-        status = this.status,
-        createdAt = this.createdAt,
-        updatedAt = this.updatedAt
-    )
-}
-
-
-fun List<OrderEntity>.toModels(): List<Order> = this.map { it.toModel() }
 fun List<Order>.toResponses(): List<OrderResponse> = this.map { it.toResponse() }
 
 private fun generateOrderNumber(): String {
     val timestamp = System.currentTimeMillis()
     val random = UUID.randomUUID().toString().substring(0, 8).uppercase()
     return "ORD-$timestamp-$random"
-}
+} 
