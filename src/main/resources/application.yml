@@ -53,7 +53,6 @@ spring:
 server:
   port: 8081
 
-# Cấu hình logging
 logging:
   level:
     liquibase: INFO
@@ -61,13 +60,53 @@ logging:
     orgSpringframeworkJdbc: DEBUG
     orgSpringframeworkWeb: DEBUG
 
-springdoc:
-  swagger-ui:
-    url: /v3/api-docs
-
 inventory:
   service:
     url: http://localhost:8082
 
 servers:
   include-warmup: true
+
+# Spring Boot Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus  # Explicitly include metrics and prometheus
+      base-path: ""
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+      probes:
+        enabled: true
+    metrics:
+      enabled: true  # Explicitly enable metrics
+    prometheus:
+      enabled: true  # Explicitly enable prometheus
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+    mongo:
+      enabled: true
+  server:
+    port: 8081
+  metrics:
+    export:
+      prometheus:
+        enabled: true  # Enable Prometheus metrics export
+
+# SpringDoc OpenAPI Configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    enabled: false
+  show-actuator: true
+  group-configs:
+    - group: order-service
+      paths-to-match: /api/order/**
+      display-name: Order Service API

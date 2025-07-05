@@ -48,6 +48,13 @@ logging:
     com.loc: DEBUG
     org.springframework.jdbc: DEBUG
 
-springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
   swagger-ui:
-    url:
+    enabled: false 
+  show-actuator: true
+  group-configs:
+    - group: order-service
+      paths-to-match: /api/order/**
+      display-name: Order Service API

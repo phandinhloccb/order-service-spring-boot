@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
-    id("org.springframework.boot") version "3.5.0"
+    id("org.springframework.boot") version "3.2.0"
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("plugin.jpa") version "1.9.25"
     id("org.openapi.generator") version "7.4.0"
@@ -41,7 +41,14 @@ dependencies {
     // Kafka dependencies
     implementation("org.apache.kafka:kafka-clients")
     implementation("org.springframework.kafka:spring-kafka")
-    
+
+    // Micrometer Prometheus for /actuator/prometheus endpoint
+    implementation("io.micrometer:micrometer-registry-prometheus")
+
+    // SpringDoc OpenAPI for API docs only (no UI)
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.2.0")
+
+
     // Avro dependencies
     implementation("org.apache.avro:avro:1.11.3")
     implementation("io.confluent:kafka-avro-serializer:7.4.0")
