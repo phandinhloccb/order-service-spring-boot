@@ -3,10 +3,10 @@ spring:
     name: order-service
 
   datasource:
-    url: jdbc:mysql://localhost:3307/order_service 
+    url: jdbc:mysql://localhost:3307/order_service  #inject by external secret
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: mysql
+    username: root #inject by external secret
+    password: mysql #inject by external secret
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
@@ -40,12 +40,12 @@ spring:
       appVersion: 1.0.0
   
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: localhost:9092 #inject by external secret
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
       properties:
-        schema.registry.url: http://localhost:8085
+        schema.registry.url: http://localhost:8085 #inject by external secret
     output:
       topic:
         order-completed: orders.order.completed.v1
@@ -62,7 +62,7 @@ logging:
 
 inventory:
   service:
-    url: http://localhost:8082
+    url: http://localhost:8082 #inject by configmap
 
 servers:
   include-warmup: true
