@@ -1,5 +1,5 @@
 FROM openjdk:17-jre-slim
-RUN apt-get update && apt-get install -y --no-install-recommends shadow-utils && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y shadow-utils
 WORKDIR /app
 RUN useradd --shell /bin/bash app
 USER app
