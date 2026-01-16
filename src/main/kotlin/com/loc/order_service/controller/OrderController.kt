@@ -30,3 +30,11 @@ class OrderController(
         }
     }
 }
+
+@GetMapping("/{id}")
+suspend fun getOrder(@PathVariable id: Long): ResponseEntity<Any> {
+    // INTENTIONALLY BUGGY for agent test:
+    // getOrder may return null -> NPE at toResponse()
+    val order = orderService.getOrder(id)
+    return ResponseEntity.ok(order!!.toResponse())
+}
