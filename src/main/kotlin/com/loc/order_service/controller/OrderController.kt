@@ -16,19 +16,26 @@ class OrderController(
     private val orderService: OrderService
 ) {
     @PostMapping
-    suspend fun createOrder(@RequestBody orderRequest: OrderRequest): ResponseEntity<Any> {
-        val orderModel = orderRequest.toModel()
-        return when (val result = orderService.createOrder(orderModel)) {
+    suspend fun createOrder(@RequestBody orderRequest: OrderRequest?): ResponseEntity<Any> {
+        if (orderRequest == null) {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(mapOf("error" to "Invalid order request"))
+        }
+
+        val result = orderService.createOrder(orderRequest.toModel())
+        return when (result) {
             is OrderResult.Success -> ResponseEntity
                 .status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(result.order?.toResponse() ?: "Order created but response is empty")
-                
+                .body(result.order.toResponse())
+
             is OrderResult.BusinessFailure -> ResponseEntity
                 .status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(mapOf("error" to (result.reason ?: "Unknown error occurred")))
-            
+                .body(mapOf("error" to result.reason))
+
             null -> ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
