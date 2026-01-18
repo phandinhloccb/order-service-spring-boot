@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/orders")
-class OrderController(
+class OrderController @Autowired constructor(
     private val orderService: OrderService
 ) {
     @PostMapping
