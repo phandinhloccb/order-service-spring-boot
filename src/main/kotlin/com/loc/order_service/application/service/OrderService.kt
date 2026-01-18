@@ -22,6 +22,10 @@ class OrderService(
 
     @Transactional
     suspend fun createOrder(order: Order): OrderResult {
+        if (order.skuCode.isBlank()) {
+            return OrderResult.BusinessFailure("Invalid SKU code: SKU code cannot be blank")
+        }
+
         log.info { "Creating order for SKU: ${order.skuCode}" }
 
         return when (inventoryService.checkStock(order.skuCode, order.quantity)) {
