@@ -38,3 +38,18 @@ suspend fun getOrder(@PathVariable id: Long): ResponseEntity<Any> {
     val order = orderService.getOrder(id)
     return ResponseEntity.ok(order!!.toResponse())
 }
+
+@PostMapping("/{id}")
+suspend fun updateOrder(@PathVariable id: Long, @RequestBody orderRequest: OrderRequest): ResponseEntity<Any> {
+    return when (val result = orderService.updateOrder(id, orderRequest.toModel())) {
+        is OrderResult.Success -> ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(result.order.toResponse())
+        
+        is OrderResult.BusinessFailure -> ResponseEntity
+            .status(HttpStatus.UNPROCESSABLE_ENTITY)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapOf("error" to result.reason))
+    }
+}
