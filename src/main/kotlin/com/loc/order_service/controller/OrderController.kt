@@ -17,16 +17,23 @@ class OrderController(
 ) {
     @PostMapping
     suspend fun createOrder(@RequestBody orderRequest: OrderRequest): ResponseEntity<Any> {
-        return when (val result = orderService.createOrder(orderRequest.toModel())) {
-            is OrderResult.Success -> ResponseEntity
-                .status(HttpStatus.CREATED)
+        return try {
+            when (val result = orderService.createOrder(orderRequest.toModel())) {
+                is OrderResult.Success -> ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(result.order.toResponse())
+                    
+                is OrderResult.BusinessFailure -> ResponseEntity
+                    .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(mapOf("error" to result.reason))
+            }
+        } catch (e: Exception) {
+            ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(result.order.toResponse())
-                
-            is OrderResult.BusinessFailure -> ResponseEntity
-                .status(HttpStatus.UNPROCESSABLE_ENTITY)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(mapOf("error" to result.reason))
+                .body(mapOf("error" to "An unexpected error occurred"))
         }
     }
 }
