@@ -24,6 +24,10 @@ class OrderService(
     suspend fun createOrder(order: Order): OrderResult {
         log.info { "Creating order for SKU: ${order.skuCode}" }
 
+        if (order.skuCode.isBlank()) {
+            return OrderResult.BusinessFailure("Invalid SKU code: SKU code cannot be blank")
+        }
+
         return when (inventoryService.checkStock(order.skuCode, order.quantity)) {
             InventoryResult.InStock -> {
                 val orderWithConfirmedStatus = order.copy(status = OrderStatusEnum.CONFIRMED)
