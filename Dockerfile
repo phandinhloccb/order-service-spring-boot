@@ -1,5 +1,5 @@
 FROM openjdk:17-jre-slim
-RUN yum -y update && yum install -y shadow-utils
+RUN apt-get update && apt-get install -y shadow-utils
 WORKDIR /app
 RUN useradd --shell /bin/bash app
 USER app
